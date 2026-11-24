@@ -1,0 +1,579 @@
+<!doctype html>
+<html lang="es">
+<head>
+<title>Reencuentro</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* Layout: una columna amplia, secciones suaves que respiran. El protagonista es el círculo de respiración; lo interactivo (ánimo, simulador, mitos, chat) invita a jugar sin presión. */
+:root{
+  --bg:#F2F7F5;
+  --surface:#FFFFFF;
+  --soft:#E3EFEC;
+  --ink:#1E3638;
+  --muted:#526B6C;
+  --accent:#2F7F7B;
+  --accent-ink:#FFFFFF;
+  --warm:#F8E3D3;
+  --warm-ink:#5A3A24;
+  --lilac:#E7E4F5;
+  --line:#CFE0DB;
+  --tense:#D98A66;
+  --font-display:'Fraunces',Georgia,serif;
+  --font-body:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#10201F;--surface:#172B2A;--soft:#1C3433;--ink:#E6F1EE;--muted:#A3BDB9;
+    --accent:#6CC1BB;--accent-ink:#0E1F1E;--warm:#3A2B22;--warm-ink:#F3D9C6;--lilac:#27263D;--line:#2A4442;--tense:#E8A688;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#10201F;--surface:#172B2A;--soft:#1C3433;--ink:#E6F1EE;--muted:#A3BDB9;
+  --accent:#6CC1BB;--accent-ink:#0E1F1E;--warm:#3A2B22;--warm-ink:#F3D9C6;--lilac:#27263D;--line:#2A4442;--tense:#E8A688;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:17px;line-height:1.65}
+h1,h2,h3{font-family:var(--font-display);font-weight:600;line-height:1.15;margin:0;text-wrap:balance}
+p{margin:0}
+a{color:var(--accent)}
+button{font-family:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:8px}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.eyebrow{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+section{padding-block:72px}
+.lead{color:var(--muted);max-width:60ch;margin-top:14px;font-size:1.05rem}
+.sec-head{display:grid;gap:10px;margin-bottom:36px}
+.sec-head h2{font-size:clamp(1.7rem,4vw,2.4rem);max-width:22ch}
+
+/* Aparición suave al desplazarse (siempre legible) */
+.js .rv{opacity:.35;transform:translateY(20px);transition:opacity .7s ease,transform .7s ease}
+.js .rv.in{opacity:1;transform:none}
+
+/* Hero */
+.hero{position:relative;overflow:hidden;margin-top:calc(-1 * env(safe-area-inset-top,0px));padding-top:calc(env(safe-area-inset-top,0px) + 28px);padding-bottom:64px;
+  background:radial-gradient(900px 480px at 85% 20%,var(--lilac),transparent 70%),radial-gradient(700px 420px at 5% 90%,var(--warm),transparent 70%),var(--bg)}
+.blob{position:absolute;border-radius:50%;filter:blur(34px);opacity:.55;pointer-events:none}
+.b1{width:260px;height:260px;background:var(--lilac);top:6%;left:-60px;animation:drift 16s ease-in-out infinite}
+.b2{width:200px;height:200px;background:var(--warm);bottom:-40px;right:12%;animation:drift 20s ease-in-out infinite reverse}
+.b3{width:140px;height:140px;background:color-mix(in srgb,var(--accent) 30%,transparent);top:48%;right:-30px;animation:drift 13s ease-in-out infinite}
+@keyframes drift{0%,100%{transform:translate(0,0)}50%{transform:translate(26px,-34px)}}
+.hero .wrap{position:relative}
+.brand{display:flex;align-items:center;gap:10px;font-family:var(--font-display);font-size:1.25rem;font-weight:600;margin-bottom:56px}
+.brand i{width:14px;height:14px;border-radius:50%;background:var(--accent);box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 22%,transparent);animation:pulse 3s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--accent) 8%,transparent)}}
+.hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:40px;align-items:center}
+.hero h1{font-size:clamp(2.3rem,6.5vw,4rem);letter-spacing:-.01em}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero h1 span,.hero .sub,.hero .cta{display:inline-block;animation:up .9s cubic-bezier(.2,.7,.2,1) both}
+.hero h1 span:nth-child(2){animation-delay:.12s}
+.hero h1 span:nth-child(3){animation-delay:.24s}
+.hero .sub{display:block;animation-delay:.4s}
+.hero .cta{animation-delay:.55s}
+@keyframes up{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.hero .sub{margin-top:20px;font-size:1.15rem;color:var(--muted);max-width:46ch}
+.cta{display:inline-block;margin-top:30px;background:var(--accent);color:var(--accent-ink);padding:14px 26px;border-radius:999px;font-weight:700;text-decoration:none;transition:transform .2s,box-shadow .2s}
+.cta:hover{transform:translateY(-3px);box-shadow:0 10px 24px color-mix(in srgb,var(--accent) 35%,transparent)}
+.breath{display:grid;place-items:center;aspect-ratio:1;max-width:340px;width:100%;margin-inline:auto;position:relative}
+.breath .ring,.breath .core{position:absolute;border-radius:50%}
+.breath .ring{inset:0;background:color-mix(in srgb,var(--accent) 14%,transparent);animation:ring 8s ease-in-out infinite}
+.breath .core{inset:22%;background:color-mix(in srgb,var(--accent) 34%,transparent);animation:ring 8s ease-in-out infinite;animation-delay:-.4s}
+.breath span{position:relative;font-family:var(--font-display);font-size:1.5rem;text-align:center;padding:0 12px}
+.breath small{display:block;font-family:var(--font-body);font-size:.85rem;color:var(--muted);margin-top:4px}
+@keyframes ring{0%,100%{transform:scale(.72)}50%{transform:scale(1)}}
+
+/* Ánimo */
+.mood{padding-block:44px;background:var(--surface);border-block:1px solid var(--line)}
+.mood-box{display:grid;grid-template-columns:auto 1fr;gap:28px;align-items:center}
+.mood h2{font-size:1.5rem;max-width:14ch}
+.mood-opts{display:flex;flex-wrap:wrap;gap:10px}
+.mood-opts button{border:2px solid var(--line);background:var(--bg);color:var(--ink);padding:11px 20px;border-radius:999px;font-weight:700;font-size:1rem;cursor:pointer;transition:transform .2s,border-color .2s,background .2s}
+.mood-opts button:hover{transform:translateY(-2px);border-color:var(--accent)}
+.mood-opts button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.mood-msg{grid-column:1/-1;min-height:3.4em;padding:16px 20px;border-radius:18px;background:var(--soft);display:none}
+.mood-msg.show{display:block;animation:fade .4s ease}
+.mood-msg a{font-weight:700}
+
+/* Te pasa */
+.chips{display:flex;flex-wrap:wrap;gap:12px}
+.chip{background:var(--surface);border:1px solid var(--line);padding:12px 20px;border-radius:999px;font-weight:600;transition:transform .25s,background .25s}
+.chip:hover{transform:translateY(-3px) rotate(-1deg);background:var(--lilac)}
+.note{margin-top:26px;color:var(--muted);max-width:62ch}
+
+/* Pasos */
+.steps{list-style:none;margin:0;padding:0;display:grid;gap:0;counter-reset:s}
+.steps li{display:grid;grid-template-columns:56px 1fr;gap:18px;padding-bottom:30px;position:relative}
+.steps li::before{counter-increment:s;content:counter(s);width:44px;height:44px;border-radius:50%;background:var(--surface);border:2px solid var(--line);color:var(--muted);display:grid;place-items:center;font-family:var(--font-display);font-size:1.2rem;font-weight:600;z-index:1;transition:background .5s,color .5s,border-color .5s,transform .5s}
+.steps li::after{content:"";position:absolute;left:21px;top:44px;bottom:0;width:2px;background:var(--line)}
+.steps li:last-child::after{display:none}
+.steps li.on::before{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);transform:scale(1.08)}
+.steps li.on::after{background:var(--accent)}
+.steps h3{font-size:1.25rem;margin-bottom:4px}
+.steps p{color:var(--muted);max-width:56ch}
+
+/* Simulador */
+.sim{background:var(--surface);border:1px solid var(--line);border-radius:28px;padding:28px;display:grid;gap:22px}
+.tabs{display:flex;flex-wrap:wrap;gap:8px}
+.tabs button{border:2px solid var(--line);background:var(--bg);color:var(--ink);padding:9px 18px;border-radius:999px;font-weight:700;cursor:pointer;transition:background .2s,border-color .2s}
+.tabs button[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.sim-grid{display:grid;grid-template-columns:1.3fr 1fr;gap:22px}
+.scene{border-radius:22px;padding:26px;min-height:190px;display:flex;flex-direction:column;justify-content:space-between;gap:14px;
+  background:color-mix(in srgb,var(--lilac) var(--p,40%),var(--soft));transition:background .6s}
+.scene .lv{font-size:.8rem;letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--accent)}
+.scene p{font-family:var(--font-display);font-size:1.3rem;line-height:1.3;min-height:3.9em}
+.scene.pulse{animation:scenepulse 1.6s ease}
+@keyframes scenepulse{40%{transform:scale(1.02)}}
+.ctrl{display:grid;gap:16px;align-content:start}
+.ctrl label{font-weight:700;display:flex;justify-content:space-between;gap:10px}
+input[type=range]{width:100%;accent-color:var(--accent);height:28px}
+.meter{display:grid;gap:6px}
+.track{height:14px;border-radius:999px;background:var(--soft);overflow:hidden}
+.fill{height:100%;width:30%;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--tense));transition:width .8s cubic-bezier(.2,.7,.2,1)}
+.meter small{color:var(--muted);display:flex;justify-content:space-between}
+.btn2{border:2px solid var(--accent);background:transparent;color:var(--accent);padding:10px 20px;border-radius:999px;font-weight:700;cursor:pointer;transition:background .2s,color .2s}
+.btn2:hover{background:var(--accent);color:var(--accent-ink)}
+.psi{padding:14px 18px;border-radius:16px;background:var(--soft);font-size:.98rem;min-height:3.6em}
+.sim-note{font-size:.85rem;color:var(--muted)}
+
+/* Beneficios */
+.alt{background:var(--soft)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.card{background:var(--surface);border-radius:22px;padding:26px;border:1px solid var(--line);transition:transform .3s,box-shadow .3s}
+.card:hover{transform:translateY(-6px);box-shadow:0 16px 34px color-mix(in srgb,var(--accent) 16%,transparent)}
+.card h3{font-size:1.2rem;margin-bottom:8px}
+.card p{color:var(--muted);font-size:.98rem}
+.proof{margin-top:30px;padding:20px 24px;border-radius:18px;background:var(--surface);border:1px dashed var(--accent);max-width:62ch;color:var(--ink)}
+
+/* Conviene saber */
+.know{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+.know div{background:var(--warm);color:var(--warm-ink);border-radius:22px;padding:24px;transition:transform .3s}
+.know div:hover{transform:translateY(-4px)}
+.know h3{font-size:1.1rem;margin-bottom:6px}
+.know p{font-size:.98rem}
+
+/* Mitos */
+.progress{display:flex;align-items:center;gap:8px;margin-bottom:22px;color:var(--muted);font-weight:700}
+.dots{display:flex;gap:6px}
+.dots i{width:12px;height:12px;border-radius:50%;background:var(--line);transition:background .4s,transform .4s}
+.dots i.d{background:var(--accent);transform:scale(1.2)}
+.myths{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:18px}
+.myth{background:var(--surface);border:1px solid var(--line);border-radius:22px;padding:24px;display:flex;flex-direction:column;gap:16px;min-width:0;transition:transform .3s}
+.myth:hover{transform:translateY(-3px)}
+.myth q{font-family:var(--font-display);font-size:1.2rem;line-height:1.3;quotes:"“" "”"}
+.pick{display:flex;gap:10px;flex-wrap:wrap}
+.pick button{font-weight:700;font-size:1rem;border:2px solid var(--line);background:var(--bg);color:var(--ink);padding:10px 20px;border-radius:999px;cursor:pointer;transition:background .2s,border-color .2s}
+.pick button:hover:not(:disabled){border-color:var(--accent)}
+.pick button:disabled{cursor:default;opacity:.55}
+.pick button.chosen{opacity:1;border-color:var(--accent);background:var(--soft)}
+.reveal{display:none;border-radius:16px;padding:14px 16px;background:var(--soft);font-size:.98rem}
+.reveal.show{display:block;animation:fade .35s ease}
+.reveal b{display:block;margin-bottom:2px;color:var(--accent)}
+.done{display:none;margin-top:22px;padding:18px 22px;border-radius:18px;background:var(--lilac)}
+.done.show{display:block;animation:fade .5s ease}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* Crisis */
+.help{background:var(--lilac);border-radius:28px;padding:36px;display:grid;gap:10px}
+.help h2{font-size:clamp(1.5rem,3.4vw,2rem)}
+.help .num{font-family:var(--font-display);font-size:1.6rem;font-weight:600;color:var(--accent)}
+.help p{max-width:60ch}
+
+/* Pie */
+footer{padding-block:48px 56px;border-top:1px solid var(--line);color:var(--muted);font-size:.95rem}
+footer h3{font-size:1.05rem;color:var(--ink);margin-bottom:8px}
+footer ul{list-style:none;padding:0;margin:0 0 18px;display:grid;gap:2px}
+.fine{font-size:.85rem;max-width:64ch}
+
+/* Chat */
+.chat-fab{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));z-index:40;display:flex;align-items:center;gap:10px;border:0;background:var(--accent);color:var(--accent-ink);padding:14px 22px;border-radius:999px;font-weight:700;font-size:1rem;cursor:pointer;box-shadow:0 10px 28px color-mix(in srgb,var(--accent) 40%,transparent);transition:transform .2s}
+.chat-fab:hover{transform:translateY(-3px)}
+.chat-fab[hidden]{display:none}
+.chat-fab i{width:10px;height:10px;border-radius:50%;background:var(--accent-ink);animation:pulse 3s ease-in-out infinite}
+.chat-panel{position:fixed;right:max(16px,env(safe-area-inset-right,0px));bottom:calc(84px + env(safe-area-inset-bottom,0px));z-index:41;width:min(390px,calc(100vw - 32px));height:min(580px,calc(100dvh - 120px));display:none;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:26px;box-shadow:0 24px 60px rgba(10,30,30,.25);overflow:hidden}
+.chat-panel.open{display:flex;animation:fade .3s ease}
+.chat-head{display:flex;align-items:center;gap:12px;padding:16px 18px;background:var(--soft);border-bottom:1px solid var(--line)}
+.avatar{width:40px;height:40px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--lilac),var(--accent));flex:none}
+.chat-head b{display:block;font-family:var(--font-display);font-size:1.1rem;line-height:1.2}
+.chat-head small{color:var(--muted);font-size:.8rem}
+.chat-head button{margin-left:auto;border:0;background:transparent;color:var(--ink);font-size:1.5rem;line-height:1;cursor:pointer;padding:6px 10px;border-radius:10px}
+.msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:10px;min-height:0}
+.bub{max-width:88%;padding:11px 15px;border-radius:18px;font-size:.97rem;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere;animation:fade .3s ease}
+.bub.ai{background:var(--soft);border-bottom-left-radius:6px;align-self:flex-start}
+.bub.me{background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:6px;align-self:flex-end}
+.bub.err{background:var(--warm);color:var(--warm-ink);align-self:flex-start}
+.sugg{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 10px}
+.sugg button{border:1.5px solid var(--line);background:var(--bg);color:var(--ink);padding:7px 13px;border-radius:999px;font-size:.88rem;font-weight:600;cursor:pointer}
+.sugg button:hover{border-color:var(--accent)}
+.chat-form{display:flex;gap:8px;padding:12px 14px;border-top:1px solid var(--line)}
+.chat-form input{flex:1;min-width:0;border:2px solid var(--line);background:var(--bg);color:var(--ink);padding:11px 16px;border-radius:999px;font:inherit;font-size:.97rem}
+.chat-form input:focus{outline:none;border-color:var(--accent)}
+.chat-form button{border:0;background:var(--accent);color:var(--accent-ink);padding:0 18px;border-radius:999px;font-weight:700;cursor:pointer}
+.chat-form button:disabled{opacity:.5;cursor:default}
+.chat-note{font-size:.75rem;color:var(--muted);text-align:center;padding:0 14px 12px}
+
+@media(max-width:760px){
+  .hero-grid{grid-template-columns:1fr}
+  .breath{max-width:240px;order:-1}
+  .brand{margin-bottom:32px}
+  section{padding-block:52px}
+  .help{padding:26px}
+  .mood-box{grid-template-columns:1fr;gap:16px}
+  .mood h2{max-width:none}
+  .sim{padding:20px}
+  .sim-grid{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .js .rv{opacity:1;transform:none}
+  .breath .ring,.breath .core{transform:scale(.88)}
+}
+</style>
+
+</head>
+<body>
+<header class="hero">
+  <span class="blob b1" aria-hidden="true"></span><span class="blob b2" aria-hidden="true"></span><span class="blob b3" aria-hidden="true"></span>
+  <div class="wrap">
+    <div class="brand"><i aria-hidden="true"></i>Reencuentro</div>
+    <div class="hero-grid">
+      <div>
+        <h1><span>Volver a lo que te asusta,</span> <span><em>a tu ritmo</em></span> <span>y acompañado.</span></h1>
+        <p class="sub">Terapia con realidad virtual, guiada por un psicólogo. Tú das cada paso con calma, y no estás solo en ninguno.</p>
+        <a class="cta" href="#como-funciona">Conoce cómo funciona</a>
+      </div>
+      <div class="breath" aria-hidden="true">
+        <div class="ring"></div><div class="core"></div>
+        <span id="breathText">Respira despacio<small>Sigue el círculo</small></span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="mood" id="animo">
+  <div class="wrap">
+    <div class="mood-box">
+      <h2>¿Cómo llegas hoy?</h2>
+      <div class="mood-opts" id="moodOpts">
+        <button type="button" data-m="calma" aria-pressed="false">En calma</button>
+        <button type="button" data-m="nervios" aria-pressed="false">Con nervios</button>
+        <button type="button" data-m="cansancio" aria-pressed="false">Sin energía</button>
+        <button type="button" data-m="mal" aria-pressed="false">Muy mal hoy</button>
+      </div>
+      <div class="mood-msg" id="moodMsg" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+</div>
+
+<main>
+<section>
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">¿Te suena familiar?</span>
+      <h2>Hay cosas que tu mente evita, y eso cansa.</h2>
+      <p class="lead">Evitar un miedo da alivio un rato, pero con el tiempo lo hace más grande. La buena noticia es que se puede aprender a enfrentarlo poco a poco.</p>
+    </div>
+    <div class="chips rv">
+      <span class="chip">Miedo a volar</span>
+      <span class="chip">Miedo a las alturas</span>
+      <span class="chip">Nervios al hablar en público</span>
+      <span class="chip">Ansiedad que no se va</span>
+      <span class="chip">Recuerdos difíciles que vuelven</span>
+    </div>
+    <p class="note rv">Practicar estas situaciones en la vida real no siempre es posible ni seguro. La realidad virtual permite hacerlo en el consultorio, con tu psicólogo al lado.</p>
+  </div>
+</section>
+
+<section id="como-funciona" class="alt">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Cómo es una sesión</span>
+      <h2>Cinco pasos, sin prisa.</h2>
+    </div>
+    <ol class="steps" id="steps">
+      <li><div><h3>Conversamos</h3><p>Tu psicólogo te escucha y entiende qué te asusta y cómo te afecta. Aquí empieza todo.</p></div></li>
+      <li><div><h3>Elegimos un lugar</h3><p>Se escoge un espacio virtual parecido a lo que temes: un avión, una altura, un auditorio.</p></div></li>
+      <li><div><h3>Vamos poco a poco</h3><p>Empiezas con lo más suave. Tu psicólogo controla cuánta intensidad hay y la ajusta según cómo te sientas.</p></div></li>
+      <li><div><h3>Aprendes a manejarlo</h3><p>Además de la experiencia virtual, practicas formas de pensar y de calmarte que puedes usar solo después.</p></div></li>
+      <li><div><h3>Lo llevas a tu vida</h3><p>Lo aprendido se traslada a tu día a día, y tu psicólogo te acompaña viendo cómo vas.</p></div></li>
+    </ol>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Pruébalo tú</span>
+      <h2>Así se avanza poco a poco.</h2>
+      <p class="lead">Elige un miedo y sube de nivel a tu ritmo. Si algo se siente fuerte, respira o baja un nivel, como lo haría tu psicólogo.</p>
+    </div>
+    <div class="sim rv">
+      <div class="tabs" role="tablist" aria-label="Elige una situación" id="simTabs"></div>
+      <div class="sim-grid">
+        <div class="scene" id="scene" aria-live="polite">
+          <span class="lv" id="lvLabel"></span>
+          <p id="lvText"></p>
+        </div>
+        <div class="ctrl">
+          <label for="lvl"><span>Nivel</span><span id="lvNum">1 de 5</span></label>
+          <input type="range" id="lvl" min="1" max="5" step="1" value="1">
+          <div class="meter">
+            <div class="track"><div class="fill" id="fill"></div></div>
+            <small><span>Calma</span><span>Tensión</span></small>
+          </div>
+          <button type="button" class="btn2" id="breathBtn">Respirar un momento</button>
+        </div>
+      </div>
+      <div class="psi" id="psi" role="status" aria-live="polite"></div>
+      <p class="sim-note">Es solo una ilustración para entender la idea. No mide ni evalúa nada de ti.</p>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Por qué puede ayudar</span>
+      <h2>Un espacio seguro para practicar lo difícil.</h2>
+    </div>
+    <div class="cards rv">
+      <div class="card"><h3>Es seguro</h3><p>Todo ocurre dentro del consultorio, con un profesional cerca. Lo que ves no puede hacerte daño.</p></div>
+      <div class="card"><h3>Hay control</h3><p>Tu psicólogo decide cuánto estímulo hay en cada momento y lo baja cuando lo necesitas.</p></div>
+      <div class="card"><h3>Se hace a tu medida</h3><p>El entorno se adapta a tu miedo y a tu historia, no a un molde general.</p></div>
+      <div class="card"><h3>Es más fácil seguir</h3><p>Muchas personas sienten que es más llevadero y se mantienen en el tratamiento.</p></div>
+    </div>
+    <p class="proof rv">Lo que cuentas aquí se apoya en investigaciones científicas publicadas en revistas especializadas.</p>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Lo que conviene saber</span>
+      <h2>Te lo contamos con claridad.</h2>
+      <p class="lead">Confiar también es saber qué esperar. Estas son las cosas que tienes que tener presentes.</p>
+    </div>
+    <div class="know rv">
+      <div><h3>Es un complemento</h3><p>La realidad virtual no reemplaza a tu psicólogo. Es una herramienta que él usa dentro de la terapia.</p></div>
+      <div><h3>Puede dar mareo</h3><p>A algunas personas les pasa. Tu psicólogo está atento a cómo te sientes y ajusta la sesión.</p></div>
+      <div><h3>El equipo tiene un costo</h3><p>Usar esta tecnología puede suponer gastos adicionales frente a una terapia tradicional.</p></div>
+      <div><h3>No funciona igual para todos</h3><p>Los estudios siguen avanzando, y en algunas situaciones hace falta combinarla con otras técnicas.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="alt">
+  <div class="wrap">
+    <div class="sec-head rv">
+      <span class="eyebrow">Mitos y verdades</span>
+      <h2>¿Qué crees tú? Elige y descubre.</h2>
+      <p class="lead">No hay puntaje ni respuestas malas. Es solo para resolver dudas.</p>
+    </div>
+    <div class="progress"><span id="progTxt">0 de 6</span><div class="dots" id="dots" aria-hidden="true"></div></div>
+    <div class="myths" id="myths"></div>
+    <div class="done" id="done" role="status">Ya resolviste tus dudas principales. Si te queda alguna más, pregúntale a Reencuentro con el botón de abajo, o habla con un psicólogo.</div>
+  </div>
+</section>
+
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="help rv" id="apoyo" role="note" aria-label="Apoyo si lo necesitas">
+      <span class="eyebrow">Si hoy es un día difícil</span>
+      <h2>No estás solo ni sola, y no tienes que esperar.</h2>
+      <p>Si sientes que necesitas hablar con alguien ahora, puedes llamar a la Línea 113 del Ministerio de Salud del Perú y marcar la opción 5, de salud mental.</p>
+      <p class="num">Línea 113, opción 5</p>
+      <p>Si estás en peligro inmediato, acude al servicio de emergencia más cercano.</p>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <h3>Reencuentro</h3>
+    <ul>
+      <li>Gomez Chahua, Danitza</li>
+      <li>Chavez Colque, Mileydy Griselda</li>
+      <li>Mamani Coaguila, Yuliana</li>
+      <li>Huanca Cruz, Odaliz Bethzabe</li>
+    </ul>
+    <p>UTP Tacna · 2026</p>
+    <p class="fine" style="margin-top:12px">Proyecto académico. Esta página es informativa y no ofrece atención psicológica ni reemplaza la consulta con un profesional.</p>
+  </div>
+</footer>
+
+<!-- Chat con Reencuentro conectado a una API segura en el servidor -->
+<button type="button" class="chat-fab" id="chatFab" hidden aria-expanded="false" aria-controls="chatPanel"><i aria-hidden="true"></i>Pregúntale a Reencuentro</button>
+<div class="chat-panel" id="chatPanel" role="dialog" aria-label="Chat con Reencuentro">
+  <div class="chat-head">
+    <div class="avatar" aria-hidden="true"></div>
+    <div><b>Reencuentro</b><small>Asistente virtual · Psicología y realidad virtual</small></div>
+    <button type="button" id="chatClose" aria-label="Cerrar chat">×</button>
+  </div>
+  <div class="msgs" id="msgs" aria-live="polite"></div>
+  <div class="sugg" id="sugg"></div>
+  <form class="chat-form" id="chatForm">
+    <input type="text" id="chatInput" placeholder="Escribe tu duda…" autocomplete="off" maxlength="400" aria-label="Escribe tu duda">
+    <button type="submit" id="chatSend">Enviar</button>
+  </form>
+  <p class="chat-note">La IA ofrece información general; no diagnostica ni reemplaza a un profesional. Evita compartir datos personales.</p>
+</div>
+
+<script>
+document.documentElement.classList.add('js');
+
+/* Aparición al desplazarse */
+(function(){
+  const rv=[...document.querySelectorAll('.rv')];
+  if(!('IntersectionObserver' in window)){rv.forEach(e=>e.classList.add('in'));return}
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target)}}),{threshold:.12});
+  rv.forEach(e=>io.observe(e));
+})();
+
+/* Pasos que se encienden */
+(function(){
+  const lis=[...document.querySelectorAll('#steps li')];
+  if(!('IntersectionObserver' in window)){lis.forEach(l=>l.classList.add('on'));return}
+  const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')}),{rootMargin:'0px 0px -30% 0px'});
+  lis.forEach(l=>io.observe(l));
+})();
+
+/* Respiración */
+(function(){
+  const bt=document.getElementById('breathText');
+  if(!bt||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  let inh=true;
+  const set=()=>{bt.innerHTML=(inh?'Inhala':'Exhala')+'<small>'+(inh?'despacio, por la nariz':'suave, soltando todo')+'</small>';inh=!inh};
+  set();setInterval(set,4000);
+})();
+
+/* Ánimo */
+(function(){
+  const M={
+    calma:'Qué bueno que llegas con calma. Aprovéchala para conocer cómo funciona, sin apuro.',
+    nervios:'Es normal sentir nervios. Aquí todo se hace poco a poco, y tú marcas el ritmo.',
+    cansancio:'Cargar con miedos cansa mucho. No tienes que poder con todo tú solo o sola, y pedir ayuda es una forma de cuidarte.',
+    mal:'Gracias por estar aquí. Hoy no tienes que resolver nada. Si necesitas hablar con alguien ahora, llama a la Línea 113 y marca la opción 5. <a href="#apoyo">Ver más apoyo</a>.'
+  };
+  const box=document.getElementById('moodMsg');
+  document.querySelectorAll('#moodOpts button').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('#moodOpts button').forEach(x=>x.setAttribute('aria-pressed',String(x===b)));
+    box.innerHTML=M[b.dataset.m];
+    box.classList.remove('show');void box.offsetWidth;box.classList.add('show');
+  }));
+})();
+
+/* Simulador */
+(function(){
+  const S={
+    volar:{n:'Volar',l:["Estás en una sala de espera tranquila y ves un avión a lo lejos por la ventana.","Entras a un avión vacío y te sientas, sin despegar.","El avión rueda despacio por la pista.","Despegas en un día de cielo despejado.","Vuelas con una turbulencia muy suave, acompañado."]},
+    alturas:{n:'Alturas',l:["Miras un paisaje desde la ventana del primer piso.","Subes al segundo piso de un edificio.","Sales a un balcón con barandas altas.","Miras hacia abajo desde un puente con baranda.","Te asomas desde un mirador alto, con tu psicólogo a tu lado."]},
+    hablar:{n:'Hablar en público',l:["Estás de pie en un salón vacío, en silencio.","Entran tres personas amables y se sientan.","Dices tu nombre y un saludo corto al grupo.","Hablas un minuto sobre algo que te gusta.","Presentas un tema a un grupo atento."]}
+  };
+  let key='volar',tension=16;
+  const tabs=document.getElementById('simTabs'),scene=document.getElementById('scene'),
+    lvl=document.getElementById('lvl'),lvLabel=document.getElementById('lvLabel'),lvText=document.getElementById('lvText'),
+    lvNum=document.getElementById('lvNum'),fill=document.getElementById('fill'),psi=document.getElementById('psi'),br=document.getElementById('breathBtn');
+  Object.keys(S).forEach(k=>{
+    const b=document.createElement('button');b.type='button';b.setAttribute('role','tab');b.textContent=S[k].n;b.dataset.k=k;
+    b.addEventListener('click',()=>{key=k;lvl.value=1;render(true)});
+    tabs.appendChild(b);
+  });
+  function msg(){
+    if(tension<30)return 'Tu psicólogo: "Vas tranquilo. Podemos seguir cuando quieras."';
+    if(tension<60)return 'Tu psicólogo: "Es normal notar algo de tensión. Respira conmigo y seguimos."';
+    return 'Tu psicólogo: "Hagamos una pausa. Respira, y si quieres bajamos un nivel."';
+  }
+  function render(reset){
+    const L=+lvl.value;
+    if(reset)tension=L*16;
+    tabs.querySelectorAll('button').forEach(b=>b.setAttribute('aria-selected',String(b.dataset.k===key)));
+    lvLabel.textContent=S[key].n+' · paso '+L;
+    lvText.textContent=S[key].l[L-1];
+    lvNum.textContent=L+' de 5';
+    scene.style.setProperty('--p',(L*18)+'%');
+    fill.style.width=Math.max(6,Math.min(100,tension))+'%';
+    psi.textContent=msg();
+  }
+  lvl.addEventListener('input',()=>render(true));
+  br.addEventListener('click',()=>{
+    tension=Math.max(6,tension-22);
+    scene.classList.remove('pulse');void scene.offsetWidth;scene.classList.add('pulse');
+    render(false);
+  });
+  render(true);
+})();
+
+/* Mitos y verdades */
+(function(){
+  const MYTHS=[
+    {q:"Me dejarán solo dentro de un mundo virtual.",a:false,t:"Tu psicólogo está contigo en todo momento y controla lo que ves y cuánta intensidad tiene."},
+    {q:"La realidad virtual reemplaza a mi psicólogo.",a:false,t:"Es solo una herramienta. La terapia la lleva el profesional, y tú no la haces sola."},
+    {q:"Tengo que enfrentar mi mayor miedo de golpe.",a:false,t:"Se empieza por lo más suave y se avanza poco a poco, al ritmo que tú puedas."},
+    {q:"Puede ayudar con miedos como volar o las alturas.",a:true,t:"Los estudios muestran que, en fobias, puede ayudar casi igual que enfrentarlas en la vida real."},
+    {q:"Algunas personas sienten mareo.",a:true,t:"Es posible. Por eso tu psicólogo cuida cómo te sientes y puede ajustar la sesión."},
+    {q:"También puede servir para recuerdos muy difíciles.",a:true,t:"Puede ayudar a quienes vivieron algo muy duro, siempre acompañados por un profesional."}
+  ];
+  const box=document.getElementById('myths'),dots=document.getElementById('dots'),prog=document.getElementById('progTxt'),done=document.getElementById('done');
+  let n=0;
+  MYTHS.forEach(()=>dots.appendChild(document.createElement('i')));
+  MYTHS.forEach((m,i)=>{
+    const c=document.createElement('div');c.className='myth rv';
+    c.innerHTML='<q>'+m.q+'</q><div class="pick"><button type="button" data-v="0">Mito</button><button type="button" data-v="1">Verdad</button></div><div class="reveal" role="status" aria-live="polite"></div>';
+    c.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+      const right=(b.dataset.v==='1')===m.a;
+      c.querySelectorAll('button').forEach(x=>x.disabled=true);
+      b.classList.add('chosen');
+      const r=c.querySelector('.reveal');
+      r.innerHTML='<b>'+(m.a?'Es verdad.':'Es un mito.')+'</b>'+(right?'':'Mucha gente piensa lo mismo. ')+m.t;
+      r.classList.add('show');
+      n++;dots.children[i].classList.add('d');prog.textContent=n+' de '+MYTHS.length;
+      if(n===MYTHS.length)done.classList.add('show');
+    }));
+    box.appendChild(c);
+  });
+  document.querySelectorAll('.myth.rv').forEach(e=>{if('IntersectionObserver' in window){new IntersectionObserver((es,o)=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');o.unobserve(x.target)}}),{threshold:.12}).observe(e)}else e.classList.add('in')});
+})();
+
+/* Chat de Reencuentro conectado al backend seguro. La clave API nunca se expone en el navegador. */
+(function(){
+  const fab=document.getElementById('chatFab'),panel=document.getElementById('chatPanel'),
+    msgs=document.getElementById('msgs'),form=document.getElementById('chatForm'),
+    input=document.getElementById('chatInput'),send=document.getElementById('chatSend'),
+    sugg=document.getElementById('sugg'),closeBtn=document.getElementById('chatClose');
+  if(!fab||!panel||!msgs||!form)return;
+  fab.hidden=false;
+  const history=[];
+  const add=(cls,text)=>{const d=document.createElement('div');d.className='bub '+cls;d.textContent=text;msgs.appendChild(d);msgs.scrollTop=msgs.scrollHeight;return d};
+  const CRISIS=/suicid|matarme|quitarme la vida|no quiero vivir|quiero morir|quisiera morir|acabar con mi vida|hacerme da[ñn]o|cortarme|desaparecer para siempre/i;
+  const crisis='Gracias por contármelo. Lo que sientes importa y mereces apoyo ahora. Si estás en peligro inmediato, llama a emergencias o acude al servicio de urgencias más cercano. En Perú puedes llamar a la Línea 100? No: para orientación en salud mental llama al 113, opción 5. Busca también a una persona de confianza para que te acompañe. No te quedes a solas si puedes hacerte daño.';
+  async function ask(raw){
+    const q=raw.trim();if(!q||send.disabled)return;
+    add('me',q);input.value='';sugg.style.display='none';
+    if(CRISIS.test(q.toLocaleLowerCase('es'))){add('ai',crisis);return;}
+    send.disabled=true;input.disabled=true;send.textContent='…';
+    const loading=add('ai','Estoy pensando…');
+    try{
+      const response=await fetch('/api/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({message:q,history:history.slice(-10)})});
+      const data=await response.json();
+      if(!response.ok)throw new Error(data.error||'No pude conectar con el asistente.');
+      loading.textContent=data.reply;
+      history.push({role:'user',content:q},{role:'assistant',content:data.reply});
+    }catch(err){loading.textContent='No pude responder en este momento. Comprueba tu conexión o inténtalo más tarde. '+(err.message||'');}
+    finally{send.disabled=false;input.disabled=false;send.textContent='Enviar';input.focus();}
+  }
+  add('ai','¡Hola! Soy Reencuentro. Puedo conversar contigo y ofrecer información general sobre psicología y terapia de exposición con realidad virtual. ¿Qué te gustaría saber?');
+  ['¿Qué es la exposición con realidad virtual?','¿Cómo se desarrolla una sesión?','¿Puede causar mareos?','¿La realidad virtual reemplaza al psicólogo?'].forEach(t=>{const b=document.createElement('button');b.type='button';b.textContent=t;b.addEventListener('click',()=>ask(t));sugg.appendChild(b)});
+  form.addEventListener('submit',ev=>{ev.preventDefault();ask(input.value)});
+  function toggle(open){panel.classList.toggle('open',open);fab.setAttribute('aria-expanded',String(open));fab.style.display=open?'none':'';if(open)setTimeout(()=>input.focus(),50);else fab.focus();}
+  fab.addEventListener('click',()=>toggle(true));closeBtn.addEventListener('click',()=>toggle(false));
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&panel.classList.contains('open'))toggle(false)});
+})();
+</script>
+</body>
+</html>
